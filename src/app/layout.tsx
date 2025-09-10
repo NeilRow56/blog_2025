@@ -6,6 +6,7 @@ import { Toaster } from '@/components/ui/sonner'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import { ThemeProvider } from '@/components/theme-provider'
 import { APP_DESCRIPTION, APP_NAME } from '@/lib/constants'
+import Header from '@/components/header'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -43,7 +44,8 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            {children}
+            <Header />
+            <main className="px-4' container mx-auto">{children}</main>
             <Toaster
               position='bottom-center'
               toastOptions={{
