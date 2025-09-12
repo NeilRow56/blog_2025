@@ -44,7 +44,6 @@ const registerSchema = z
         .safeParse(payload.value).success
     }
   })
-
 type RegisterSchemaType = z.infer<typeof registerSchema>
 
 export default function RegisterForm() {
