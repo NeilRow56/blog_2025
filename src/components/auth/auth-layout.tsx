@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
 import LoginForm from './login-form'
-import RegisterForm from './register-form'
+import { RegisterForm } from './register-form'
 
 function AuthLayout() {
   const [activeTab, setActiveTab] = useState('login')
@@ -21,7 +21,7 @@ function AuthLayout() {
             <LoginForm />
           </TabsContent>
           <TabsContent value='register'>
-            <RegisterForm />
+            <RegisterForm onSuccess={() => setActiveTab('login')} />
           </TabsContent>
         </Tabs>
       </div>

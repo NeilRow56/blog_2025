@@ -3,11 +3,14 @@ import { schema } from '@/db/schema'
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { nextCookies } from 'better-auth/next-js'
+
 export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
-    requireEmailVerification: false
+    requireEmailVerification: false,
+    autoSignIn: false
   },
+
   session: {
     expiresIn: 30 * 24 * 60 * 60 * 2, // 60 days - default is 7 days
     cookieCache: {
@@ -22,7 +25,7 @@ export const auth = betterAuth({
       ...schema,
       user: schema.users,
       session: schema.sessions,
-      accounts: schema.accounts
+      account: schema.accounts
     }
   }),
   plugins: [nextCookies()]

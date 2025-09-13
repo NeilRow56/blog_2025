@@ -18,6 +18,9 @@ import {
   FormLabel,
   FormMessage
 } from '@/components/ui/form'
+import { signIn } from '@/server/users'
+import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
 
 const loginSchema = z.object({
   email: z.email('Please enter a valid email address!'),
@@ -29,6 +32,8 @@ type LoginSchemaType = z.infer<typeof loginSchema>
 export default function LoginForm() {
   const [isLoading, setIsLoading] = useState(false)
 
+  const router = useRouter()
+
   const form = useForm<LoginSchemaType>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -39,11 +44,16 @@ export default function LoginForm() {
 
   async function onSubmit(values: LoginSchemaType) {
     setIsLoading(true)
-    try {
-      console.log(values)
-    } catch (error) {
-      console.log(error)
+    const { success, message } = await signIn(values.email, values.password)
+
+    if (success) {
+      toast.success(message as string)
+      router.push('/')
+    } else {
+      toast.error(message as string)
     }
+
+    setIsLoading(false)
   }
   return (
     <Card className='overflow-hidden p-0'>

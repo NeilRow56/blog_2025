@@ -19,6 +19,10 @@ import {
   FormMessage
 } from '@/components/ui/form'
 
+// import { signUp } from '@/lib/auth-client'
+import { toast } from 'sonner'
+import { signUp } from '@/server/users'
+
 const registerSchema = z
   .object({
     name: z.string().min(3, 'Name must be at least 3 characters'),
@@ -46,7 +50,11 @@ const registerSchema = z
   })
 type RegisterSchemaType = z.infer<typeof registerSchema>
 
-export default function RegisterForm() {
+interface RegisterFormProps {
+  onSuccess?: () => void
+}
+
+export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
   const [isLoading, setIsLoading] = useState(false)
 
   const form = useForm<RegisterSchemaType>({
@@ -59,13 +67,55 @@ export default function RegisterForm() {
     }
   })
 
+  // async function onSubmit(values: RegisterSchemaType) {
+  //   setIsLoading(true)
+  //   try {
+  //     const { error } = await signUp.email({
+  //       name: values.name,
+  //       email: values.email,
+  //       password: values.password
+  //     })
+
+  //     if (error) {
+  //       toast('Failed to create account. Plerase try again')
+  //       return
+  //     }
+  //     toast(
+  //       'Your account has been created successfully. Please sign in with email and password'
+  //     )
+
+  //     if (onSuccess) {
+  //       onSuccess()
+  //     }
+  //   } catch (error) {
+  //     console.log(error)
+  //   } finally {
+  //     setIsLoading(false)
+  //   }
+  // }
+
   async function onSubmit(values: RegisterSchemaType) {
     setIsLoading(true)
-    try {
-      console.log(values)
-    } catch (error) {
-      console.log(error)
+
+    const { success, message } = await signUp(
+      values.email,
+      values.password,
+      values.name
+    )
+
+    if (success) {
+      toast.success(
+        `${message as string} Please check your email for verification.`
+      )
+      // router.push('/')
+      if (onSuccess) {
+        onSuccess()
+      }
+    } else {
+      toast.error(message as string)
     }
+
+    setIsLoading(false)
   }
 
   return (
